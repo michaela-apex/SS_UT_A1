@@ -174,49 +174,49 @@
 
         /* Override any media query rules that might hide navigation */
         @media (max-width: 600px) {
-            .nav-container,
-            .nav-top,
-            .nav-left,
-            .nav-right,
-            .logo,
-            .location,
-            .nav-icon {
+            .navigation-container,
+            .navigation-top,
+            .navigation-left,
+            .navigation-right,
+            .logo-icon,
+            .location-info,
+            .icon {
                 display: block !important;
                 visibility: visible !important;
                 opacity: 1 !important;
             }
             
-            .nav-top {
+            .navigation-top {
                 display: flex !important;
             }
             
-            .nav-left,
-            .nav-right,
-            .location {
+            .navigation-left,
+            .navigation-right,
+            .location-info {
                 display: flex !important;
             }
         }
 
         @media (min-width: 601px) {
-            .nav-container,
-            .nav-top,
-            .nav-left,
-            .nav-right,
-            .logo,
-            .location,
-            .nav-icon {
+            .navigation-container,
+            .navigation-top,
+            .navigation-left,
+            .navigation-right,
+            .logo-icon,
+            .location-info,
+            .icon {
                 display: block !important;
                 visibility: visible !important;
                 opacity: 1 !important;
             }
             
-            .nav-top {
+            .navigation-top {
                 display: flex !important;
             }
             
-            .nav-left,
-            .nav-right,
-            .location {
+            .navigation-left,
+            .navigation-right,
+            .location-info {
                 display: flex !important;
             }
         }
@@ -2628,13 +2628,13 @@
         }
 
         /* FINAL OVERRIDE - Force navigation visibility in ALL conditions */
-        .nav-container,
-        .nav-top,
-        .nav-left,
-        .nav-right,
-        .logo,
-        .location,
-        .nav-icon,
+        .navigation-container,
+        .navigation-top,
+        .navigation-left,
+        .navigation-right,
+        .logo-icon,
+        .location-info,
+        .icon,
         .location-text {
             display: block !important;
             visibility: visible !important;
@@ -2648,38 +2648,38 @@
             -webkit-backface-visibility: hidden !important;
         }
         
-        .nav-top {
+        .navigation-top {
             display: flex !important;
         }
         
-        .nav-left,
-        .nav-right,
-        .location {
+        .navigation-left,
+        .navigation-right,
+        .location-info {
             display: flex !important;
         }
         
         /* Additional force rendering for developer tools */
         @media screen {
-            .nav-container,
-            .nav-top,
-            .nav-left,
-            .nav-right,
-            .logo,
-            .location,
-            .nav-icon {
+            .navigation-container,
+            .navigation-top,
+            .navigation-left,
+            .navigation-right,
+            .logo-icon,
+            .location-info,
+            .icon {
                 display: block !important;
                 visibility: visible !important;
                 opacity: 1 !important;
                 transform: translateZ(0) !important;
             }
             
-            .nav-top {
+            .navigation-top {
                 display: flex !important;
             }
             
-            .nav-left,
-            .nav-right,
-            .location {
+            .navigation-left,
+            .navigation-right,
+            .location-info {
                 display: flex !important;
             }
         }
