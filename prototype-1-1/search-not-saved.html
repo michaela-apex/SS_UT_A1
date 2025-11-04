@@ -1633,6 +1633,11 @@
             align-items: flex-start;
             padding: 24px 24px 0;
             border-bottom: 1px solid #bcbfc2;
+            position: relative;
+            z-index: 100;
+            background: white;
+            touch-action: none; /* Prevent scrollable content from capturing touch events */
+            pointer-events: auto; /* Explicitly allow pointer events */
         }
 
         .filter-menu-tabs {
@@ -1651,6 +1656,11 @@
         .filter-tab {
             cursor: pointer;
             transition: all 0.2s ease;
+            touch-action: manipulation; /* Allow tap but prevent scroll interference */
+            position: relative;
+            z-index: 10;
+            pointer-events: auto;
+            -webkit-tap-highlight-color: transparent; /* Remove mobile tap highlight */
         }
 
         /* Default/Inactive state */
@@ -1723,6 +1733,14 @@
             background: none;
             border: none;
             cursor: pointer;
+            touch-action: manipulation; /* Allow tap but prevent scroll interference */
+            position: relative;
+            z-index: 10;
+            pointer-events: auto;
+            -webkit-tap-highlight-color: transparent; /* Remove mobile tap highlight */
+            min-height: 44px; /* Minimum touch target size for mobile */
+            min-width: 44px; /* Minimum touch target size for mobile */
+            padding: 10px; /* Increase touch area */
         }
 
         .filter-close-icon {
@@ -1973,6 +1991,7 @@
             padding: 0 !important;
             gap: 16px;
             width: 100% !important;
+            touch-action: pan-y; /* Only allow vertical scrolling, not horizontal */
         }
 
         .saved-searches-section {
