@@ -6180,6 +6180,17 @@
             }
         }
 
+        function updateHamburgerSignInButton() {
+            const hamburgerSignIn = document.querySelector('.hamburger-signin');
+            if (hamburgerSignIn) {
+                if (isSignedIn) {
+                    hamburgerSignIn.style.display = 'none'; // Hide sign in button when signed in
+                } else {
+                    hamburgerSignIn.style.display = 'flex'; // Show sign in button when not signed in
+                }
+            }
+        }
+
         function toggleFavorite(button) {
             const icon = button.querySelector('.favorite-icon');
             if (icon.src.includes('favorite.svg')) {
@@ -6220,6 +6231,7 @@
                 closeToast();
                 updateSaveSearchButton();
                 updateMySearchesContent(); // Update My searches content
+                updateHamburgerSignInButton(); // Update hamburger menu sign in button
                 // Set flag so they see alert toast instead of sign-in toast
                 hasShownAlertToast = false;
                 // Don't set hasShownAlertToast = true here - let them see the alerts toast
@@ -6263,6 +6275,7 @@
             closeSignIn();
             closeToast();
             updateSaveSearchButton();
+            updateHamburgerSignInButton(); // Update hamburger menu sign in button
             console.log('User signed in with Google successfully');
         }
 
@@ -6305,6 +6318,7 @@
             closeToast();
             updateSaveSearchButton();
             updateMySearchesContent(); // Update My searches content
+            updateHamburgerSignInButton(); // Update hamburger menu sign in button
             console.log('User signed in successfully');
         }
 
@@ -6370,6 +6384,7 @@
             closeSignIn();
             closeToast();
             updateSaveSearchButton();
+            updateHamburgerSignInButton(); // Update hamburger menu sign in button
             console.log('User signed in after account creation');
             
             // Don't set hasShownAlertToast = true - let them see the alerts toast
@@ -6384,6 +6399,7 @@
             closeToast();
             updateSaveSearchButton();
             updateMySearchesContent(); // Update My searches content for signed-in state
+            updateHamburgerSignInButton(); // Update hamburger menu sign in button
             // Set flag in localStorage to show alert toast when they press save search
             localStorage.setItem('showAlertToast', 'true');
             // Navigate to search results or homepage
@@ -6646,6 +6662,7 @@
             }
             
             updateSaveSearchButton();
+            updateHamburgerSignInButton(); // Update hamburger menu sign in button on page load
             
             // Check if user should be signed in (from account creation)
             if (localStorage.getItem('showAlertToast') === 'true') {
@@ -6654,6 +6671,7 @@
                 localStorage.setItem('isSignedIn', 'true');
                 updateSaveSearchButton();
                 updateMySearchesContent();
+                updateHamburgerSignInButton(); // Update hamburger menu sign in button
                 // Don't show toast yet - wait for them to press save search
             }
             
