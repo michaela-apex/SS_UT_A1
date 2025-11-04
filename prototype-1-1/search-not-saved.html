@@ -1973,7 +1973,6 @@
             padding: 0 !important;
             gap: 16px;
             width: 100% !important;
-            touch-action: pan-y; /* Only allow vertical scrolling, not horizontal */
         }
 
         .saved-searches-section {
@@ -4527,8 +4526,12 @@
             const filterMenu = document.getElementById('filterMenu');
             if (filterMenu) {
                 filterMenu.style.display = 'block';
-                // Prevent background scrolling
+                // Prevent background scrolling on both body and mobile-container
                 document.body.style.overflow = 'hidden';
+                const mobileContainer = document.querySelector('.mobile-container');
+                if (mobileContainer) {
+                    mobileContainer.style.overflow = 'hidden';
+                }
                 // Add slide-in animation
                 setTimeout(() => {
                     filterMenu.classList.add('show');
@@ -4590,8 +4593,12 @@
             const filterMenu = document.getElementById('filterMenu');
             if (filterMenu) {
                 filterMenu.classList.remove('show');
-                // Restore background scrolling
+                // Restore background scrolling on both body and mobile-container
                 document.body.style.overflow = 'auto';
+                const mobileContainer = document.querySelector('.mobile-container');
+                if (mobileContainer) {
+                    mobileContainer.style.overflow = 'auto';
+                }
                 setTimeout(() => {
                     filterMenu.style.display = 'none';
                 }, 300);
