@@ -4535,10 +4535,10 @@
                 
                 // Prevent touch scrolling on mobile (iOS Safari needs this)
                 const preventScroll = function(e) {
-                    // Allow scrolling within the filter menu panel itself
-                    const filterPanel = document.querySelector('.filter-menu-panel');
-                    if (filterPanel && filterPanel.contains(e.target)) {
-                        return; // Allow scrolling inside filter menu
+                    // Allow touches on the entire filter menu overlay (header, panel, everything)
+                    const filterMenuOverlay = document.getElementById('filterMenu');
+                    if (filterMenuOverlay && filterMenuOverlay.contains(e.target)) {
+                        return; // Allow all touches inside filter menu (including header)
                     }
                     e.preventDefault();
                 };
