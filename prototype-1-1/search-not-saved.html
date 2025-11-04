@@ -4537,22 +4537,6 @@
                     mobileContainer.style.overflow = 'hidden';
                 }
                 
-                // Prevent touch scrolling on mobile (iOS Safari needs this)
-                const preventScroll = function(e) {
-                    // Allow touches on the entire filter menu overlay (header, panel, everything)
-                    const filterMenuOverlay = document.getElementById('filterMenu');
-                    if (filterMenuOverlay && filterMenuOverlay.contains(e.target)) {
-                        return; // Allow all touches inside filter menu (including header)
-                    }
-                    e.preventDefault();
-                };
-                document.body.addEventListener('touchmove', preventScroll, { passive: false });
-                if (mobileContainer) {
-                    mobileContainer.addEventListener('touchmove', preventScroll, { passive: false });
-                }
-                // Store the handler so we can remove it later
-                filterMenu._preventScrollHandler = preventScroll;
-                
                 // Add slide-in animation
                 setTimeout(() => {
                     filterMenu.classList.add('show');
@@ -4569,6 +4553,45 @@
                     } else {
                         // No saved searches or not signed in - default to Filters tab
                         switchToFiltersTab();
+                    }
+                    
+                    // iOS fix: Add explicit touchend handlers to ensure clicks work
+                    const filterTabs = filterMenu.querySelectorAll('.filter-tab');
+                    const closeButton = filterMenu.querySelector('.filter-menu-close');
+                    
+                    filterTabs.forEach((tab, index) => {
+                        // Remove any existing handler
+                        if (tab._iosTouchHandler) {
+                            tab.removeEventListener('touchend', tab._iosTouchHandler);
+                        }
+                        
+                        const handler = function(e) {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            // Manually trigger the onclick function
+                            if (index === 0) {
+                                switchToFiltersTab();
+                            } else {
+                                switchToMySearchesTab();
+                            }
+                        };
+                        tab.addEventListener('touchend', handler, { passive: false });
+                        tab._iosTouchHandler = handler; // Store for cleanup
+                    });
+                    
+                    if (closeButton) {
+                        // Remove any existing handler
+                        if (closeButton._iosTouchHandler) {
+                            closeButton.removeEventListener('touchend', closeButton._iosTouchHandler);
+                        }
+                        
+                        const closeHandler = function(e) {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            closeFilterMenu();
+                        };
+                        closeButton.addEventListener('touchend', closeHandler, { passive: false });
+                        closeButton._iosTouchHandler = closeHandler; // Store for cleanup
                     }
                 }, 10);
             }
@@ -4621,13 +4644,19 @@
                     mobileContainer.style.overflow = 'auto';
                 }
                 
-                // Remove touch scroll prevention
-                if (filterMenu._preventScrollHandler) {
-                    document.body.removeEventListener('touchmove', filterMenu._preventScrollHandler);
-                    if (mobileContainer) {
-                        mobileContainer.removeEventListener('touchmove', filterMenu._preventScrollHandler);
+                // Clean up iOS touch handlers
+                const filterTabs = filterMenu.querySelectorAll('.filter-tab');
+                filterTabs.forEach(tab => {
+                    if (tab._iosTouchHandler) {
+                        tab.removeEventListener('touchend', tab._iosTouchHandler);
+                        tab._iosTouchHandler = null;
                     }
-                    filterMenu._preventScrollHandler = null;
+                });
+                
+                const closeButton = filterMenu.querySelector('.filter-menu-close');
+                if (closeButton && closeButton._iosTouchHandler) {
+                    closeButton.removeEventListener('touchend', closeButton._iosTouchHandler);
+                    closeButton._iosTouchHandler = null;
                 }
                 
                 setTimeout(() => {
