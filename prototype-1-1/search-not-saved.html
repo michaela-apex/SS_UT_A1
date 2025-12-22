@@ -4478,6 +4478,7 @@
         let isSearchSaved = false;
         let alertsEnabled = localStorage.getItem('alertsEnabled') === 'true'; // Restore from localStorage
         let hasShownAlertToast = localStorage.getItem('hasShownAlertToast') === 'true'; // Restore from localStorage
+        let pendingSaveSearch = false; // Track if user tried to save search before signing in
 
         function openHamburgerMenu() {
             document.getElementById('hamburgerOverlay').style.display = 'block';
@@ -5565,6 +5566,7 @@
             
             if (!isSignedIn) {
                 console.log('Showing toast for non-signed-in user');
+                pendingSaveSearch = true; // Remember they wanted to save
                 showSaveSearchToast();
             } else {
                 console.log('User is signed in, toggling search saved');
@@ -6232,9 +6234,9 @@
                 updateSaveSearchButton();
                 updateMySearchesContent(); // Update My searches content
                 updateHamburgerSignInButton(); // Update hamburger menu sign in button
-                // Set flag so they see alert toast instead of sign-in toast
-                hasShownAlertToast = false;
-                // Don't set hasShownAlertToast = true here - let them see the alerts toast
+                
+                // Complete pending save search if user tried to save before signing in
+                completePendingSaveSearch();
             } else {
                 console.log('Closing from sign-in form - not signing in');
                 // User is on sign-in form - just close without signing in
@@ -6267,6 +6269,23 @@
             }
         }
 
+        // Helper function to complete a pending save search after authentication
+        function completePendingSaveSearch() {
+            if (pendingSaveSearch) {
+                console.log('Completing pending save search');
+                pendingSaveSearch = false;
+                if (!isSearchSaved) {
+                    toggleSearchSaved(); // Save the search
+                }
+                // Delay showing toast to let any previous closeToast() animation complete
+                setTimeout(() => {
+                    showSignedInToast(); // Show alerts toast
+                    hasShownAlertToast = true;
+                    localStorage.setItem('hasShownAlertToast', 'true');
+                }, 350); // Slightly longer than the 300ms closeToast animation
+            }
+        }
+
         function signInWithGoogle() {
             console.log('Sign in with Google clicked');
             // Mock Google sign-in - in real app, this would use Google OAuth
@@ -6277,6 +6296,9 @@
             updateSaveSearchButton();
             updateHamburgerSignInButton(); // Update hamburger menu sign in button
             console.log('User signed in with Google successfully');
+            
+            // Complete pending save search if user tried to save before signing in
+            completePendingSaveSearch();
         }
 
         function signIn() {
@@ -6320,6 +6342,9 @@
             updateMySearchesContent(); // Update My searches content
             updateHamburgerSignInButton(); // Update hamburger menu sign in button
             console.log('User signed in successfully');
+            
+            // Complete pending save search if user tried to save before signing in
+            completePendingSaveSearch();
         }
 
         function isValidEmail(email) {
@@ -6387,7 +6412,8 @@
             updateHamburgerSignInButton(); // Update hamburger menu sign in button
             console.log('User signed in after account creation');
             
-            // Don't set hasShownAlertToast = true - let them see the alerts toast
+            // Complete pending save search if user tried to save before signing in
+            completePendingSaveSearch();
         }
 
         function shopAllCars() {
@@ -6400,8 +6426,17 @@
             updateSaveSearchButton();
             updateMySearchesContent(); // Update My searches content for signed-in state
             updateHamburgerSignInButton(); // Update hamburger menu sign in button
-            // Set flag in localStorage to show alert toast when they press save search
-            localStorage.setItem('showAlertToast', 'true');
+            
+            // Complete pending save search before navigating
+            if (pendingSaveSearch) {
+                pendingSaveSearch = false;
+                if (!isSearchSaved) {
+                    toggleSearchSaved(); // Save the search
+                }
+                // Set flag to show toast after page reload
+                localStorage.setItem('showAlertToastOnLoad', 'true');
+            }
+            
             // Navigate to search results or homepage
             window.location.href = 'search-not-saved.html';
         }
@@ -6414,7 +6449,10 @@
             closeSignIn();
             closeToast();
             updateSaveSearchButton();
-            // Don't set hasShownAlertToast = true - let them see the alerts toast
+            
+            // Complete pending save search if user tried to save before signing in
+            completePendingSaveSearch();
+            
             // In a real app, this would navigate to account page
             alert('Account page would open here');
         }
@@ -6673,6 +6711,18 @@
                 updateMySearchesContent();
                 updateHamburgerSignInButton(); // Update hamburger menu sign in button
                 // Don't show toast yet - wait for them to press save search
+            }
+            
+            // Check if we need to show alert toast after page reload (from shopAllCars)
+            if (localStorage.getItem('showAlertToastOnLoad') === 'true') {
+                console.log('Showing alert toast after page reload');
+                localStorage.removeItem('showAlertToastOnLoad');
+                // Small delay to let page fully render
+                setTimeout(() => {
+                    showSignedInToast();
+                    hasShownAlertToast = true;
+                    localStorage.setItem('hasShownAlertToast', 'true');
+                }, 500);
             }
             
             // Clean up any existing duplicates
